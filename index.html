@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>KING SHOP — PAROSТОК</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#DC2626">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="KING SHOP">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<!-- SEO -->
+<meta name="description" content="KING SHOP — Дитячий одяг від бренду PAROSТОК. Пора рості! Магазин у Шепетівці.">
+<meta property="og:title" content="KING SHOP — Дитячий одяг">
+<meta property="og:description" content="Якісний дитячий одяг від бренду PAROSТОК">
+<meta property="og:type" content="website">
+
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800;900&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #DC2626;
+    --red-dark: #991B1B;
+    --red-light: #FEE2E2;
+    --gold: #F59E0B;
+    --gold-dark: #D97706;
+    --gold-light: #FEF3C7;
+    --cream: #FFFBF0;
+    --dark: #1B1B1B;
+    --gray: #6B7280;
+    --gray-light: #F9FAFB;
+    --white: #FFFFFF;
+    --blue: #3B82F6;
+    --green: #10B981;
+    --orange: #F97316;
+    --radius: 18px;
+    --shadow: 0 4px 24px rgba(220,38,38,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #FEF3C7 0%, #FEE2E2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 16px;
+  }
+
+  .phone {
+    width: 390px; height: 844px;
+    background: var(--cream);
+    border-radius: 44px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.22), 0 0 0 10px #1B1B1B, 0 0 0 12px #333;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .screen { display: none; flex-direction: column; height: 100%; overflow: hidden; }
+  .screen.active { display: flex; }
+
+  .statusbar {
+    background: var(--red);
+    padding: 14px 24px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white; font-size: 12px; font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .header {
+    background: linear-gradient(135deg, var(--red) 0%, #991B1B 100%);
+    padding: 12px 20px 20px;
+    color: white;
+    flex-shrink: 0;
+  }
+  .header.admin { background: linear-gradient(135deg, var(--dark) 0%, #333 100%); }
+  .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .logo { font-family: 'Unbounded', sans-serif; font-size: 22px; font-weight: 900; letter-spacing: -0.5px; }
+  .logo span { color: var(--gold); }
+  .header-sub { font-size: 12px; opacity: 0.75; font-weight: 500; }
+  .header-icons { display: flex; gap: 12px; align-items: center; }
+  .icon-btn {
+    width: 38px; height: 38px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; border: none; color: white; font-size: 18px;
+    position: relative;
+  }
+  .badge {
+    position: absolute; top: -4px; right: -4px;
+    background: var(--gold); color: var(--dark);
+    font-size: 9px; font-weight: 800;
+    width: 16px; height: 16px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Unbounded', sans-serif;
+  }
+
+  .content {
+    flex: 1; overflow-y: auto;
+    padding: 16px; scrollbar-width: none;
+  }
+  .content::-webkit-scrollbar { display: none; }
+
+  .bottom-nav {
+    background: white;
+    border-top: 1px solid #FEE2E2;
+    padding: 10px 0 20px;
+    display: flex;
+    justify-content: space-around;
+    flex-shrink: 0;
+    box-shadow: 0 -4px 20px rgba(220,38,38,0.08);
+  }
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    cursor: pointer; padding: 6px 14px; border-radius: 14px;
+    transition: all 0.2s; border: none; background: none;
+    font-family: 'Nunito', sans-serif;
+  }
+  .nav-item.active { background: var(--red-light); }
+  .nav-icon { font-size: 22px; }
+  .nav-label { font-size: 10px; font-weight: 700; color: var(--gray); }
+  .nav-item.active .nav-label { color: var(--red); }
+
+  .hero-card {
+    background: linear-gradient(135deg, var(--red) 0%, #7F1D1D 100%);
+    border-radius: var(--radius);
+    padding: 24px;
+    color: white;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-card::before {
+    content: '🌱';
+    position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+    font-size: 64px; opacity: 0.3;
+  }
+  .hero-title { font-family: 'Unbounded', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 6px; line-height: 1.3; }
+  .hero-sub { font-size: 13px; opacity: 0.8; margin-bottom: 16px; }
+  .hero-btn {
+    background: var(--gold); color: var(--dark);
+    border: none; border-radius: 10px;
+    padding: 10px 20px; font-size: 13px; font-weight: 800;
+    cursor: pointer; font-family: 'Nunito', sans-serif;
+  }
+
+  .section-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px; font-weight: 800;
+    color: var(--dark); margin-bottom: 12px;
+  }
+
+  .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .product-card {
+    background: white; border-radius: var(--radius);
+    overflow: hidden; box-shadow: var(--shadow);
+    cursor: pointer;
+  }
+  .product-img {
+    height: 130px; display: flex; align-items: center;
+    justify-content: center; font-size: 56px;
+    position: relative;
+  }
+  .product-badge {
+    position: absolute; top: 8px; left: 8px;
+    background: var(--gold); color: white;
+    font-size: 9px; font-weight: 800; padding: 3px 8px;
+    border-radius: 6px; font-family: 'Unbounded', sans-serif;
+  }
+  .product-info { padding: 10px 12px 12px; }
+  .product-name { font-size: 12px; font-weight: 700; color: var(--dark); margin-bottom: 2px; line-height: 1.3; }
+  .product-size { font-size: 10px; color: var(--gray); margin-bottom: 8px; }
+  .product-bottom { display: flex; align-items: center; justify-content: space-between; }
+  .product-price { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 800; color: var(--red); }
+  .add-btn {
+    width: 28px; height: 28px; border-radius: 9px;
+    background: var(--red); color: white; border: none;
+    font-size: 18px; cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .cart-item {
+    background: white; border-radius: var(--radius);
+    padding: 14px; margin-bottom: 10px;
+    display: flex; gap: 12px; align-items: center;
+    box-shadow: var(--shadow);
+  }
+  .cart-item-emoji { font-size: 40px; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; background: var(--red-light); border-radius: 12px; }
+  .cart-item-info { flex: 1; }
+  .cart-item-name { font-size: 13px; font-weight: 700; color: var(--dark); }
+  .cart-item-size { font-size: 11px; color: var(--gray); margin: 2px 0 8px; }
+  .qty-control { display: flex; align-items: center; gap: 10px; }
+  .qty-btn {
+    width: 26px; height: 26px; border-radius: 8px;
+    background: var(--red-light); color: var(--red);
+    border: none; font-size: 16px; font-weight: 800; cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+  }
+  .qty-num { font-size: 14px; font-weight: 800; min-width: 16px; text-align: center; }
+  .cart-item-price { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 800; color: var(--red); }
+
+  .cart-summary {
+    background: white; border-radius: var(--radius);
+    padding: 16px; box-shadow: var(--shadow);
+  }
+  .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; color: var(--gray); font-weight: 600; }
+  .summary-row.total { font-family: 'Unbounded', sans-serif; font-size: 16px; font-weight: 900; color: var(--dark); margin-bottom: 0; padding-top: 10px; border-top: 1px solid var(--red-light); }
+  .summary-row.total span:last-child { color: var(--red); }
+
+  .form-group {
+    background: white; border-radius: var(--radius);
+    padding: 14px; margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .form-label {
+    display: block; font-size: 12px; font-weight: 800;
+    color: var(--dark); margin-bottom: 6px;
+    font-family: 'Unbounded', sans-serif;
+  }
+  .form-input, .form-textarea {
+    width: 100%; padding: 10px 12px;
+    border: 2px solid var(--red-light); border-radius: 10px;
+    font-size: 13px; font-family: 'Nunito', sans-serif;
+    font-weight: 600; color: var(--dark);
+  }
+  .form-input:focus, .form-textarea:focus {
+    outline: none; border-color: var(--red);
+  }
+  .form-textarea { resize: vertical; min-height: 60px; }
+
+  .option-btn {
+    width: 100%; padding: 14px; margin-bottom: 10px;
+    border: 2px solid var(--red-light); background: white;
+    border-radius: 14px; cursor: pointer; text-align: left;
+    font-weight: 700; color: var(--dark);
+    font-family: 'Nunito', sans-serif; font-size: 13px;
+  }
+  .option-btn.selected {
+    border-color: var(--red); background: var(--red-light);
+  }
+
+  .checkout-btn {
+    width: 100%; background: var(--red); color: white;
+    border: none; border-radius: 14px; padding: 16px;
+    font-size: 15px; font-weight: 800; cursor: pointer;
+    font-family: 'Unbounded', sans-serif; margin-top: 12px;
+  }
+
+  .modal-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: white; border-radius: 28px;
+    padding: 32px 24px; text-align: center;
+    width: 100%; max-height: 90vh; overflow-y: auto;
+    animation: popIn 0.3s ease;
+  }
+  @keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal-emoji { font-size: 64px; margin-bottom: 16px; }
+  .modal-title { font-family: 'Unbounded', sans-serif; font-size: 20px; font-weight: 900; color: var(--dark); margin-bottom: 8px; }
+  .modal-sub { font-size: 14px; color: var(--gray); font-weight: 600; margin-bottom: 24px; line-height: 1.5; white-space: pre-line; }
+  .modal-btn {
+    width: 100%; background: var(--red); color: white;
+    border: none; border-radius: 14px; padding: 16px;
+    font-size: 15px; font-weight: 800; cursor: pointer;
+    font-family: 'Unbounded', sans-serif;
+  }
+
+  .empty-state { text-align: center; padding: 32px 20px; color: var(--gray); }
+  .empty-state-emoji { font-size: 48px; margin-bottom: 12px; }
+  .empty-state-text { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 800; color: var(--dark); }
+
+  .contact-box {
+    background: var(--red-light); border-radius: var(--radius);
+    padding: 16px; margin-bottom: 16px;
+    border-left: 4px solid var(--red);
+  }
+  .contact-label { font-size: 11px; color: var(--red); font-weight: 800; font-family: 'Unbounded'; margin-bottom: 4px; }
+  .contact-text { font-size: 13px; color: var(--dark); font-weight: 700; line-height: 1.5; white-space: pre-line; }
+
+  /* STATUS TRACKER */
+  .status-tracker {
+    display: flex; justify-content: space-between;
+    margin: 16px 0; position: relative;
+  }
+  .status-tracker::before {
+    content: ''; position: absolute;
+    top: 12px; left: 12px; right: 12px;
+    height: 2px; background: #E5E7EB;
+    z-index: 0;
+  }
+  .status-step {
+    flex: 1; text-align: center; position: relative; z-index: 1;
+  }
+  .status-circle {
+    width: 26px; height: 26px;
+    border-radius: 50%; background: white;
+    border: 2px solid #E5E7EB;
+    margin: 0 auto 6px; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800;
+  }
+  .status-step.active .status-circle {
+    background: var(--green); border-color: var(--green); color: white;
+  }
+  .status-step.current .status-circle {
+    background: var(--gold); border-color: var(--gold); color: white;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+  .status-label {
+    font-size: 9px; font-weight: 700; color: var(--gray);
+    font-family: 'Unbounded';
+  }
+  .status-step.active .status-label,
+  .status-step.current .status-label { color: var(--dark); }
+
+  .order-card {
+    background: white; border-radius: var(--radius);
+    padding: 16px; margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .order-id { font-family: 'Unbounded'; font-size: 14px; font-weight: 900; color: var(--red); }
+  .order-date { font-size: 11px; color: var(--gray); margin-top: 2px; font-weight: 600; }
+
+  .status-pill {
+    display: inline-block; padding: 4px 10px;
+    border-radius: 20px; font-size: 10px; font-weight: 800;
+    font-family: 'Unbounded'; text-transform: uppercase;
+  }
+  .status-pill.accepted { background: #DBEAFE; color: var(--blue); }
+  .status-pill.processing { background: #FEF3C7; color: var(--orange); }
+  .status-pill.sent { background: #E0E7FF; color: #6366F1; }
+  .status-pill.received { background: #D1FAE5; color: var(--green); }
+
+  .admin-tabs {
+    display: flex; gap: 6px; margin-bottom: 16px;
+    background: white; padding: 6px; border-radius: 14px;
+    box-shadow: var(--shadow); overflow-x: auto;
+  }
+  .admin-tab {
+    flex: 1; padding: 10px; border-radius: 10px;
+    background: var(--gray-light); color: var(--gray);
+    border: none; font-weight: 700; cursor: pointer;
+    font-family: 'Nunito'; font-size: 11px;
+    white-space: nowrap;
+  }
+  .admin-tab.active { background: var(--red); color: white; }
+
+  .status-buttons {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6px; margin-top: 10px;
+  }
+  .status-btn {
+    padding: 8px; border: 2px solid var(--red-light); background: white;
+    border-radius: 8px; cursor: pointer; font-weight: 700;
+    font-size: 10px; color: var(--dark);
+    font-family: 'Nunito';
+  }
+  .status-btn.active { background: var(--red); color: white; border-color: var(--red); }
+
+  @media (max-width: 430px) {
+    body { padding: 0; align-items: flex-start; }
+    .phone { width: 100%; height: 100vh; border-radius: 0; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- LOGIN SCREEN -->
+  <div class="screen active" id="screen-login">
+    <div class="statusbar"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="header">
+      <div class="header-top">
+        <div>
+          <div class="logo">KING <span>SHOP</span></div>
+          <div class="header-sub">PAROSТОК • Пора рості 🌱</div>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="hero-card">
+        <div class="hero-title">Вітаємо в<br>KING SHOP! 👑</div>
+        <div class="hero-sub">Реєстрація або вхід</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ім'я Прізвище</label>
+        <input class="form-input" id="login-name" placeholder="Олена Коваль">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Номер телефону</label>
+        <input class="form-input" id="login-phone" placeholder="+380 67 000 00 00" type="tel">
+      </div>
+
+      <button class="checkout-btn" onclick="loginUser()">✓ Вхід / Реєстрація</button>
+
+      <div style="text-align:center;color:var(--gray);font-size:12px;margin:20px 0 8px;font-weight:600">
+        або
+      </div>
+      <button style="width:100%;background:var(--gray-light);color:var(--dark);border:none;border-radius:14px;padding:12px;font-weight:700;cursor:pointer" onclick="loginAsGuest()">🏃 Як гість</button>
+      
+      <div style="text-align:center;margin-top:32px;padding:8px" id="admin-secret-area">
+        <div style="font-size:10px;color:var(--gray);opacity:0.4;font-weight:600">© 2025 KING SHOP</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOME SCREEN -->
+  <div class="screen" id="screen-home">
+    <div class="statusbar"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="header">
+      <div class="header-top">
+        <div>
+          <div class="logo">KING <span>SHOP</span></div>
+          <div class="header-sub" id="header-user">Привіт! 👋</div>
+        </div>
+        <div class="header-icons">
+          <button class="icon-btn" onclick="goTo('cart')">🛒<span class="badge" id="cart-badge">0</span></button>
+          <button class="icon-btn" onclick="goTo('account')">👤</button>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="hero-card">
+        <div class="hero-title">Нова колекція<br>Весна 2025 🌸</div>
+        <div class="hero-sub">Яскраві кольори для маленьких героїв</div>
+        <button class="hero-btn" onclick="goTo('catalog')">Переглянути →</button>
+      </div>
+
+      <div id="news-section"></div>
+
+      <div class="section-title">Контакти магазину</div>
+      <div id="store-contacts"></div>
+
+      <div class="section-title">Популярні товари</div>
+      <div class="products-grid" id="products-grid"></div>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="nav-item active" onclick="goTo('home')"><span class="nav-icon">🏠</span><span class="nav-label">Головна</span></button>
+      <button class="nav-item" onclick="goTo('catalog')"><span class="nav-icon">👕</span><span class="nav-label">Каталог</span></button>
+      <button class="nav-item" onclick="goTo('cart')"><span class="nav-icon">🛒</span><span class="nav-label">Кошик</span></button>
+      <button class="nav-item" onclick="goTo('account')"><span class="nav-icon">👤</span><span class="nav-label">Акаунт</span></button>
+    </div>
+  </div>
+
+  <!-- CATALOG SCREEN -->
+  <div class="screen" id="screen-catalog">
+    <div class="statusbar"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="header">
+      <div class="header-top">
+        <div>
+          <div class="logo">KING <span>SHOP</span></div>
+          <div class="header-sub">Каталог товарів</div>
+        </div>
+        <div class="header-icons">
+          <button class="icon-btn" onclick="goTo('cart')">🛒<span class="badge" id="cart-badge2">0</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="products-grid" id="catalog-grid"></div>
+    </div>
+    <div class="bottom-nav">
+      <button class="nav-item" onclick="goTo('home')"><span class="nav-icon">🏠</span><span class="nav-label">Головна</span></button>
+      <button class="nav-item active" onclick="goTo('catalog')"><span class="nav-icon">👕</span><span class="nav-label">Каталог</span></button>
+      <button class="nav-item" onclick="goTo('cart')"><span class="nav-icon">🛒</span><span class="nav-label">Кошик</span></button>
+      <button class="nav-item" onclick="goTo('account')"><span class="nav-icon">👤</span><span class="nav-label">Акаунт</span></button>
+    </div>
+  </div>
+
+  <!-- CART SCREEN -->
+  <div class="screen" id="screen-cart">
+    <div class="statusbar"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="header">
+      <div class="header-top">
+        <div>
+          <div class="logo">KING <span>SHOP</span></div>
+          <div class="header-sub">Ваш кошик</div>
+        </div>
+      </div>
+    </div>
+    <div class="content" id="cart-content"></div>
+    <div class="bottom-nav">
+      <button class="nav-item" onclick="goTo('home')"><span class="nav-icon">🏠</span><span class="nav-label">Головна</span></button>
+      <button class="nav-item" onclick="goTo('catalog')"><span class="nav-icon">👕</span><span class="nav-label">Каталог</span></button>
+      <button class="nav-item active" onclick="goTo('cart')"><span class="nav-icon">🛒</span><span class="nav-label">Кошик</span></button>
+      <button class="nav-item" onclick="goTo('account')"><span class="nav-icon">👤</span><span class="nav-label">Акаунт</span></button>
+    </div>
+  </div>
+
+  <!-- CHECKOUT SCREEN -->
+  <div class="screen" id="screen-checkout">
+    <div class="statusbar"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="header">
+      <div class="header-top">
+        <div>
+          <div class="logo">KING <span>SHOP</span></div>
+          <div class="header-sub">Оформлення замовлення</div>
+        </div>
+      </div>
+    </div>
+    <div class="content" id="checkout-content"></div>
+  </div>
+
+  <!-- ACCOUNT SCREEN -->
+  <div class="screen" id="screen-account">
+    <div class="statusbar"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="header">
+      <div class="header-top">
+        <div>
+          <div class="logo">KING <span>SHOP</span></div>
+          <div class="header-sub">Мій кабінет</div>
+        </div>
+        <button class="icon-btn" onclick="logoutUser()">🚪</button>
+      </div>
+    </div>
+    <div class="content" id="account-content"></div>
+    <div class="bottom-nav">
+      <button class="nav-item" onclick="goTo('home')"><span class="nav-icon">🏠</span><span class="nav-label">Головна</span></button>
+      <button class="nav-item" onclick="goTo('catalog')"><span class="nav-icon">👕</span><span class="nav-label">Каталог</span></button>
+      <button class="nav-item" onclick="goTo('cart')"><span class="nav-icon">🛒</span><span class="nav-label">Кошик</span></button>
+      <button class="nav-item active" onclick="goTo('account')"><span class="nav-icon">👤</span><span class="nav-label">Акаунт</span></button>
+    </div>
+  </div>
+
+  <!-- ADMIN SCREEN -->
+  <div class="screen" id="screen-admin">
+    <div class="statusbar"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="header admin">
+      <div class="header-top">
+        <div>
+          <div class="logo">KING <span>ADMIN</span></div>
+          <div class="header-sub">⚙️ Панель адміністратора</div>
+        </div>
+        <button class="icon-btn" onclick="logoutUser()">🚪</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchAdminTab(event, 'orders')">📦 Замов.</button>
+        <button class="admin-tab" onclick="switchAdminTab(event, 'news')">📰 Новини</button>
+        <button class="admin-tab" onclick="switchAdminTab(event, 'add-product')">➕ Додати</button>
+        <button class="admin-tab" onclick="switchAdminTab(event, 'products')">🛍️ Товари</button>
+        <button class="admin-tab" onclick="switchAdminTab(event, 'groups')">📂 Групи</button>
+        <button class="admin-tab" onclick="switchAdminTab(event, 'contacts')">📍 Контакти</button>
+        <button class="admin-tab" onclick="switchAdminTab(event, 'schedule')">🕐 Графік</button>
+      </div>
+
+      <div id="tab-orders" class="admin-tab-content"></div>
+      <div id="tab-news" class="admin-tab-content" style="display:none"></div>
+      <div id="tab-add-product" class="admin-tab-content" style="display:none"></div>
+      <div id="tab-products" class="admin-tab-content" style="display:none"></div>
+      <div id="tab-groups" class="admin-tab-content" style="display:none"></div>
+      <div id="tab-contacts" class="admin-tab-content" style="display:none"></div>
+      <div id="tab-schedule" class="admin-tab-content" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal" id="modal-content"></div>
+  </div>
+
+</div>
+
+<script>
+let products = [
+  { id:1, name:'Куртка-бомбер "Зростай"', desc:'Якісна куртка для активних дітей', emoji:'🧥', price:890, discount:0, group:'top', heights:[104,110,116,122,128,134,140,146], colors:['Червоний', 'Синій', 'Зелений'] },
+  { id:2, name:'Джинси "Паросток"', desc:'Модні джинси для дівчаток і хлопців', emoji:'👖', price:590, discount:5, group:'bottom', heights:[98,104,110,116,122,128,134,140], colors:['Синій', 'Чорний'] },
+  { id:3, name:'Світер "Мрія"', desc:'Теплий світер зі стильним принтом', emoji:'🧶', price:480, discount:0, group:'top', heights:[104,110,116,122,128,134,140], colors:['Сірий', 'Білий', 'Бежевий'] },
+];
+
+let cart = [];
+let currentUser = null;
+let orders = [];
+let nextProductId = 4;
+let tempColors = [];
+let tempPhotos = [];
+let tempBanner = null;
+let editingProductId = null;
+let editingNewsId = null;
+let secretTaps = 0;
+let nextNewsId = 1;
+
+// Admin credentials
+const ADMIN_LOGIN = 'keppimax14@';
+const ADMIN_PASSWORD = 'Maxmax14@';
+
+let news = [
+  { id: nextNewsId++, type: 'sale', emoji: '🔥', title: 'Акція тижня!', text: 'Знижки до 30% на весняну колекцію', color: 'red', active: true },
+  { id: nextNewsId++, type: 'new', emoji: '✨', title: 'Новинка тижня', text: 'Куртка-бомбер "Зростай" — нові кольори!', color: 'gold', active: true }
+];
+
+let productGroups = [
+  { id: 'top', name: 'Верхній одяг' },
+  { id: 'bottom', name: 'Штани' },
+  { id: 'shoes', name: 'Взуття' },
+  { id: 'acc', name: 'Аксесуари' }
+];
+
+// Store data (editable by admin)
+let storeData = {
+  region: 'Хмельницька область',
+  city: 'Шепетівка',
+  address: 'вул. Героїв Небесної Сотні, 26',
+  phone: '+380 67 000 0000',
+  schedule: 'Пн–Пт: 09:00–18:00\nСб–Нд: 10:00–16:00'
+};
+
+const STATUSES = {
+  accepted: { label: 'Прийнято', emoji: '📥', class: 'accepted', step: 0 },
+  processing: { label: 'Обробляється', emoji: '⚙️', class: 'processing', step: 1 },
+  sent: { label: 'Відправлено', emoji: '📦', class: 'sent', step: 2 },
+  received: { label: 'Одержано', emoji: '✅', class: 'received', step: 3 }
+};
+
+function loginUser() {
+  const name = document.getElementById('login-name').value.trim();
+  const phone = document.getElementById('login-phone').value.trim();
+  if(!name || !phone) { alert('Заповни усі поля'); return; }
+  
+  currentUser = { name, phone, isAdmin: false };
+  document.getElementById('header-user').textContent = `Привіт, ${name.split(' ')[0]}! 👋`;
+  goTo('home');
+}
+
+function loginAsGuest() {
+  currentUser = { name: 'Гість', phone: '', isGuest: true };
+  document.getElementById('header-user').textContent = 'Привіт, Гість! 👋';
+  goTo('home');
+}
+
+function showAdminLogin() {
+  document.getElementById('modal-content').innerHTML = `
+    <div>
+      <div style="font-size:48px;margin-bottom:12px">🔐</div>
+      <div class="modal-title">Адмін-панель</div>
+      <div style="font-size:13px;color:var(--gray);margin-bottom:20px;font-weight:600">Вхід тільки для адміністраторів</div>
+      
+      <div class="form-group">
+        <label class="form-label">Логін</label>
+        <input class="form-input" id="admin-login" placeholder="Введіть логін" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <input class="form-input" id="admin-password" type="password" placeholder="Введіть пароль" autocomplete="off">
+      </div>
+
+      <button class="checkout-btn" onclick="tryAdminLogin()">🔓 Увійти</button>
+      <button style="width:100%;background:var(--gray-light);color:var(--gray);border:none;border-radius:14px;padding:12px;font-weight:700;cursor:pointer;margin-top:8px" onclick="closeModal()">Скасувати</button>
+    </div>
+  `;
+  document.getElementById('modal').classList.add('show');
+  setTimeout(() => document.getElementById('admin-login').focus(), 100);
+}
+
+function tryAdminLogin() {
+  const login = document.getElementById('admin-login').value.trim();
+  const password = document.getElementById('admin-password').value.trim();
+  
+  if(login === ADMIN_LOGIN && password === ADMIN_PASSWORD) {
+    currentUser = { name: 'Адмін', phone: '', isAdmin: true };
+    closeModal();
+    goTo('admin');
+  } else {
+    document.getElementById('admin-login').style.borderColor = 'var(--red)';
+    document.getElementById('admin-password').style.borderColor = 'var(--red)';
+    showSuccessModal('❌', 'Невірні дані', 'Логін або пароль неправильні');
+    setTimeout(() => closeModal(), 1500);
+  }
+}
+
+function loginAsAdmin() {
+  showAdminLogin();
+}
+
+function logoutUser() {
+  currentUser = null;
+  cart = [];
+  updateBadge();
+  goTo('login');
+}
+
+function renderStoreContacts() {
+  const el = document.getElementById('store-contacts');
+  if(!el) return;
+  el.innerHTML = `
+    <div class="contact-box">
+      <div class="contact-label">📍 АДРЕСА</div>
+      <div class="contact-text">${storeData.region}, ${storeData.city}\n${storeData.address}</div>
+    </div>
+    <div class="contact-box">
+      <div class="contact-label">📞 ТЕЛЕФОН</div>
+      <div class="contact-text">${storeData.phone}</div>
+    </div>
+    <div class="contact-box">
+      <div class="contact-label">🕐 РЕЖИМ РОБОТИ</div>
+      <div class="contact-text">${storeData.schedule}</div>
+    </div>
+  `;
+}
+
+function renderProducts(containerId, filter='all') {
+  const grid = document.getElementById(containerId);
+  if(!grid) return;
+  const filtered = filter === 'all' ? products : products.filter(p => p.group === filter);
+  grid.innerHTML = filtered.map(p => {
+    const finalPrice = Math.round(p.price * (1 - p.discount/100));
+    const hasPhoto = p.photos && p.photos.length > 0;
+    return `
+    <div class="product-card" onclick="showProductModal(${p.id})">
+      <div class="product-img" style="${hasPhoto ? `background:url('${p.photos[0]}') center/cover` : `background:${getBg(p.group)}`}">
+        ${p.discount > 0 ? `<div class="product-badge">-${p.discount}%</div>` : ''}
+        ${!hasPhoto ? p.emoji : ''}
+      </div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-size">Ріст: ${p.heights[0]}–${p.heights[p.heights.length-1]} см</div>
+        <div class="product-bottom">
+          <div>
+            <div class="product-price">${finalPrice} ₴</div>
+            ${p.discount > 0 ? `<div style="font-size:10px;color:var(--gray);text-decoration:line-through">${p.price} ₴</div>` : ''}
+          </div>
+          <button class="add-btn" onclick="event.stopPropagation(); showProductModal(${p.id})">+</button>
+        </div>
+      </div>
+    </div>
+    `;
+  }).join('');
+}
+
+function showProductModal(productId) {
+  const product = products.find(p => p.id === productId);
+  if(!product) return;
+  const finalPrice = Math.round(product.price * (1 - product.discount/100));
+  const hasPhotos = product.photos && product.photos.length > 0;
+  
+  document.getElementById('modal-content').innerHTML = `
+    <div>
+      ${hasPhotos ? `
+        <div style="margin-bottom:16px">
+          <div style="width:100%;height:240px;border-radius:16px;overflow:hidden;background:url('${product.photos[0]}') center/cover;margin-bottom:8px" id="main-photo"></div>
+          ${product.photos.length > 1 ? `
+            <div style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none">
+              ${product.photos.map((photo, idx) => `
+                <div onclick="document.getElementById('main-photo').style.background=\`url('${photo}') center/cover\`" style="min-width:60px;height:60px;border-radius:8px;background:url('${photo}') center/cover;cursor:pointer;border:2px solid ${idx === 0 ? 'var(--red)' : 'var(--red-light)'};flex-shrink:0"></div>
+              `).join('')}
+            </div>
+          ` : ''}
+        </div>
+      ` : `<div style="font-size:48px;margin-bottom:12px">${product.emoji}</div>`}
+      
+      <div class="modal-title" style="margin-bottom:4px">${product.name}</div>
+      <div style="font-size:12px;color:var(--gray);margin-bottom:16px">${product.desc}</div>
+      
+      <div class="form-group">
+        <label class="form-label">Виберіть ріст (см)</label>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+          ${product.heights.map(h => `
+            <button style="padding:10px;border:2px solid var(--red-light);background:white;border-radius:10px;cursor:pointer;font-weight:700;color:var(--dark)" onclick="setSelectedHeight(${h})" id="height-${h}">${h}</button>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Виберіть колір</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          ${product.colors.map(c => `
+            <button style="padding:10px 14px;border:2px solid var(--red-light);background:white;border-radius:10px;cursor:pointer;font-weight:700;color:var(--dark);font-size:12px" onclick="setSelectedColor('${c}')" id="color-${c}">${c}</button>
+          `).join('')}
+        </div>
+      </div>
+
+      <div style="background:var(--red-light);border-radius:14px;padding:12px;margin:12px 0;text-align:center">
+        <div style="font-size:24px;font-weight:900;color:var(--red);font-family:'Unbounded'">${finalPrice} ₴</div>
+      </div>
+
+      <button style="width:100%;background:var(--red);color:white;border:none;border-radius:14px;padding:16px;font-weight:800;cursor:pointer;font-family:'Unbounded';margin-bottom:8px" onclick="confirmAddToCart(${productId})">🛒 Додати в кошик</button>
+      <button style="width:100%;background:var(--gray-light);color:var(--gray);border:none;border-radius:14px;padding:12px;font-weight:700;cursor:pointer" onclick="closeModal()">Скасувати</button>
+    </div>
+  `;
+  document.getElementById('modal').classList.add('show');
+  window.selectedHeight = null;
+  window.selectedColor = null;
+}
+
+function setSelectedHeight(h) {
+  window.selectedHeight = h;
+  document.querySelectorAll(`[id^="height-"]`).forEach(el => {
+    el.style.borderColor = 'var(--red-light)';
+    el.style.background = 'white';
+  });
+  document.getElementById('height-' + h).style.borderColor = 'var(--red)';
+  document.getElementById('height-' + h).style.background = 'var(--red-light)';
+}
+
+function setSelectedColor(c) {
+  window.selectedColor = c;
+  document.querySelectorAll(`[id^="color-"]`).forEach(el => {
+    el.style.borderColor = 'var(--red-light)';
+    el.style.background = 'white';
+  });
+  document.getElementById('color-' + c).style.borderColor = 'var(--red)';
+  document.getElementById('color-' + c).style.background = 'var(--red-light)';
+}
+
+function confirmAddToCart(productId) {
+  if(!window.selectedHeight) { alert('Виберіть ріст'); return; }
+  if(!window.selectedColor) { alert('Виберіть колір'); return; }
+  const product = products.find(p => p.id === productId);
+  const finalPrice = Math.round(product.price * (1 - product.discount/100));
+  const existing = cart.find(i => i.id === productId && i.height === window.selectedHeight && i.color === window.selectedColor);
+  if(existing) existing.qty++;
+  else cart.push({ ...product, price: finalPrice, qty: 1, height: window.selectedHeight, color: window.selectedColor });
+  updateBadge();
+  closeModal();
+  showSuccessModal('✅', 'Товар додано!', `${product.name}`);
+}
+
+function renderCart() {
+  const el = document.getElementById('cart-content');
+  if(!el) return;
+  if(cart.length === 0) {
+    el.innerHTML = '<div class="empty-state" style="padding-top:80px"><div class="empty-state-emoji">🛒</div><div class="empty-state-text">Кошик порожній</div></div>';
+    return;
+  }
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  el.innerHTML = cart.map((i, idx) => `
+    <div class="cart-item">
+      <div class="cart-item-emoji">${i.emoji}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${i.name}</div>
+        <div class="cart-item-size">Ріст: ${i.height} см | ${i.color}</div>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
+          <span class="qty-num">${i.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
+        </div>
+      </div>
+      <div class="cart-item-price">${i.price * i.qty} ₴</div>
+    </div>
+  `).join('') + `
+    <div class="cart-summary">
+      <div class="summary-row total"><span>РАЗОМ</span><span>${subtotal} ₴</span></div>
+      <button class="checkout-btn" onclick="goTo('checkout')">📋 Оформити замовлення</button>
+    </div>
+  `;
+}
+
+function changeQty(idx, delta) {
+  cart[idx].qty += delta;
+  if(cart[idx].qty <= 0) cart.splice(idx, 1);
+  updateBadge();
+  renderCart();
+}
+
+function updateBadge() {
+  const total = cart.reduce((s, i) => s + i.qty, 0);
+  ['cart-badge', 'cart-badge2'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = total;
+  });
+}
+
+function renderCheckout() {
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const el = document.getElementById('checkout-content');
+  el.innerHTML = `
+    <div class="section-title">📦 СПОСОБ ДОСТАВКИ</div>
+    <button class="option-btn" onclick="selectDelivery('nova-poshta', this)">📮 Нова Пошта</button>
+    <button class="option-btn" onclick="selectDelivery('self-pickup', this)">🏪 Самовивіз з магазину</button>
+    <button class="option-btn" onclick="selectDelivery('delivery-city', this)">🚚 Доставка по місту</button>
+
+    <div id="delivery-form" style="margin-top:8px"></div>
+
+    <div class="section-title" style="margin-top:16px">💳 СПОСОБ ОПЛАТИ</div>
+    <button class="option-btn" onclick="selectPayment('cash-store', this)">💵 Готівка в магазині</button>
+    <button class="option-btn" onclick="selectPayment('card-store', this)">💳 Безготівково в магазині</button>
+    <button class="option-btn" onclick="selectPayment('account', this)">🏦 Оплата на рахунок</button>
+    <button class="option-btn" onclick="selectPayment('apple-google', this)">🍎 Apple Pay / Google Pay</button>
+
+    <div class="section-title" style="margin-top:16px">💰 РАЗОМ</div>
+    <div class="cart-summary">
+      <div class="summary-row"><span>Товари</span><span>${subtotal} ₴</span></div>
+      <div class="summary-row"><span>Доставка</span><span id="delivery-price">0 ₴</span></div>
+      <div class="summary-row total"><span>ВСЬОГО</span><span id="total-price">${subtotal} ₴</span></div>
+      <button class="checkout-btn" onclick="submitOrder()">✅ Підтвердити замовлення</button>
+      <button style="width:100%;background:var(--gray-light);color:var(--gray);border:none;border-radius:14px;padding:12px;font-weight:700;cursor:pointer;margin-top:8px" onclick="goTo('cart')">← Назад до кошика</button>
+    </div>
+  `;
+  window.currentDelivery = null;
+  window.currentPayment = null;
+}
+
+function selectDelivery(type, btn) {
+  window.currentDelivery = type;
+  document.querySelectorAll('#screen-checkout .option-btn').forEach((b, idx) => {
+    if(idx < 3) b.classList.remove('selected');
+  });
+  btn.classList.add('selected');
+
+  const form = document.getElementById('delivery-form');
+  const userName = currentUser.name && currentUser.name !== 'Гість' ? currentUser.name : '';
+  const userPhone = currentUser.phone || '';
+
+  if(type === 'nova-poshta') {
+    form.innerHTML = `
+      <div class="form-group"><label class="form-label">Ім'я Прізвище</label><input class="form-input" id="d-name" value="${userName}"></div>
+      <div class="form-group"><label class="form-label">Номер телефону</label><input class="form-input" id="d-phone" value="${userPhone}" type="tel"></div>
+      <div class="form-group"><label class="form-label">Область</label><input class="form-input" id="d-region" placeholder="напр. Хмельницька"></div>
+      <div class="form-group"><label class="form-label">Місто</label><input class="form-input" id="d-city" placeholder="напр. Шепетівка"></div>
+      <div class="form-group"><label class="form-label">Номер відділення / поштомата</label><input class="form-input" id="d-branch" placeholder="напр. 1"></div>
+    `;
+    updateTotalPrice(0);
+  } else if(type === 'self-pickup') {
+    form.innerHTML = `
+      <div class="contact-box">
+        <div class="contact-label">📍 АДРЕСА МАГАЗИНУ</div>
+        <div class="contact-text">${storeData.region}, ${storeData.city}\n${storeData.address}</div>
+      </div>
+      <div class="form-group"><label class="form-label">Контактна особа</label><input class="form-input" id="d-name" value="${userName}"></div>
+      <div class="form-group"><label class="form-label">Номер телефону</label><input class="form-input" id="d-phone" value="${userPhone}" type="tel"></div>
+    `;
+    updateTotalPrice(0);
+  } else if(type === 'delivery-city') {
+    form.innerHTML = `
+      <div class="form-group"><label class="form-label">Контактна особа</label><input class="form-input" id="d-name" value="${userName}"></div>
+      <div class="form-group"><label class="form-label">Номер телефону</label><input class="form-input" id="d-phone" value="${userPhone}" type="tel"></div>
+      <div class="form-group"><label class="form-label">Вулиця та номер будинку</label><input class="form-input" id="d-street" placeholder="напр. вул. Центральна, 5"></div>
+    `;
+    updateTotalPrice(50);
+  }
+}
+
+function selectPayment(type, btn) {
+  window.currentPayment = type;
+  document.querySelectorAll('#screen-checkout .option-btn').forEach((b, idx) => {
+    if(idx >= 3 && idx < 7) b.classList.remove('selected');
+  });
+  btn.classList.add('selected');
+}
+
+function updateTotalPrice(deliveryPrice) {
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  document.getElementById('delivery-price').textContent = `${deliveryPrice} ₴`;
+  document.getElementById('total-price').textContent = `${subtotal + deliveryPrice} ₴`;
+}
+
+function submitOrder() {
+  if(!window.currentDelivery) { alert('Виберіть способ доставки'); return; }
+  if(!window.currentPayment) { alert('Виберіть способ оплати'); return; }
+
+  const name = document.getElementById('d-name')?.value.trim();
+  const phone = document.getElementById('d-phone')?.value.trim();
+  if(!name || !phone) { alert('Заповни ім\'я та телефон'); return; }
+
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const deliveryPrice = window.currentDelivery === 'delivery-city' ? 50 : 0;
+
+  const deliveryDetails = {};
+  if(window.currentDelivery === 'nova-poshta') {
+    deliveryDetails.region = document.getElementById('d-region').value;
+    deliveryDetails.city = document.getElementById('d-city').value;
+    deliveryDetails.branch = document.getElementById('d-branch').value;
+  } else if(window.currentDelivery === 'delivery-city') {
+    deliveryDetails.street = document.getElementById('d-street').value;
+  }
+
+  const order = {
+    id: 'ORD-' + Date.now().toString().slice(-6),
+    items: [...cart],
+    subtotal, deliveryPrice,
+    total: subtotal + deliveryPrice,
+    delivery: window.currentDelivery,
+    deliveryDetails,
+    payment: window.currentPayment,
+    name, phone,
+    date: new Date().toLocaleDateString('uk-UA'),
+    time: new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' }),
+    status: 'accepted',
+    customerPhone: currentUser.phone
+  };
+
+  orders.push(order);
+  cart = [];
+  updateBadge();
+
+  showSuccessModal('🎉', 'Замовлення прийнято!', `Номер: ${order.id}\nСтатус: Прийнято\nДякуємо за покупку!`);
+  setTimeout(() => { closeModal(); goTo('account'); }, 2500);
+}
+
+function renderAccount() {
+  const el = document.getElementById('account-content');
+  if(!currentUser) return;
+  
+  const userOrders = orders.filter(o => o.customerPhone === currentUser.phone);
+
+  el.innerHTML = `
+    <div class="contact-box">
+      <div class="contact-label">👤 ПРОФІЛЬ</div>
+      <div class="contact-text">${currentUser.name}\nТелефон: ${currentUser.phone || '—'}</div>
+    </div>
+
+    <div class="section-title">Мої замовлення (${userOrders.length})</div>
+    ${userOrders.length === 0 ? 
+      '<div class="empty-state"><div class="empty-state-emoji">📦</div><div class="empty-state-text">Замовлень немає</div></div>' :
+      userOrders.slice().reverse().map(o => renderOrderCard(o, false)).join('')
+    }
+  `;
+}
+
+function renderOrderCard(o, isAdmin) {
+  const status = STATUSES[o.status];
+  const stepNames = ['Прийнято', 'Обробка', 'Відправ.', 'Одержано'];
+  
+  return `
+    <div class="order-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div>
+          <div class="order-id">${o.id}</div>
+          <div class="order-date">${o.date} ${o.time}</div>
+        </div>
+        <div class="status-pill ${status.class}">${status.emoji} ${status.label}</div>
+      </div>
+
+      <div class="status-tracker">
+        ${[0,1,2,3].map(s => `
+          <div class="status-step ${s < status.step ? 'active' : s === status.step ? 'current' : ''}">
+            <div class="status-circle">${s < status.step ? '✓' : s+1}</div>
+            <div class="status-label">${stepNames[s]}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div style="font-size:12px;color:var(--dark);font-weight:700;margin:8px 0 4px">${o.items.length} товарів • ${o.total} ₴</div>
+      <div style="font-size:11px;color:var(--gray);margin-bottom:6px">${o.name} • ${o.phone}</div>
+      <div style="font-size:11px;color:var(--gray)">
+        ${o.delivery === 'nova-poshta' ? `📮 НП: ${o.deliveryDetails.city || ''}, відд. ${o.deliveryDetails.branch || ''}` :
+          o.delivery === 'self-pickup' ? '🏪 Самовивіз' : 
+          `🚚 Доставка: ${o.deliveryDetails.street || ''}`}
+      </div>
+
+      ${isAdmin ? `
+        <div style="margin-top:12px;padding-top:12px;border-top:1px dashed var(--red-light)">
+          <div style="font-size:11px;font-weight:800;color:var(--dark);font-family:'Unbounded';margin-bottom:6px">ЗМІНИТИ СТАТУС:</div>
+          <div class="status-buttons">
+            <button class="status-btn ${o.status === 'accepted' ? 'active' : ''}" onclick="changeOrderStatus('${o.id}', 'accepted')">📥 Прийнято</button>
+            <button class="status-btn ${o.status === 'processing' ? 'active' : ''}" onclick="changeOrderStatus('${o.id}', 'processing')">⚙️ Обробка</button>
+            <button class="status-btn ${o.status === 'sent' ? 'active' : ''}" onclick="changeOrderStatus('${o.id}', 'sent')">📦 Відправлено</button>
+            <button class="status-btn ${o.status === 'received' ? 'active' : ''}" onclick="changeOrderStatus('${o.id}', 'received')">✅ Одержано</button>
+          </div>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function changeOrderStatus(orderId, newStatus) {
+  const order = orders.find(o => o.id === orderId);
+  if(order) {
+    order.status = newStatus;
+    renderAdminOrders();
+    showSuccessModal('✅', 'Статус оновлено', `${orderId}\n${STATUSES[newStatus].label}`);
+    setTimeout(() => closeModal(), 1500);
+  }
+}
+
+function renderAdminOrders() {
+  const el = document.getElementById('tab-orders');
+  el.innerHTML = `
+    <div class="section-title">Усі замовлення (${orders.length})</div>
+    ${orders.length === 0 ?
+      '<div class="empty-state"><div class="empty-state-emoji">📦</div><div class="empty-state-text">Замовлень ще немає</div></div>' :
+      orders.slice().reverse().map(o => renderOrderCard(o, true)).join('')
+    }
+  `;
+}
+
+function renderAdminContacts() {
+  const el = document.getElementById('tab-contacts');
+  el.innerHTML = `
+    <div class="section-title">Редагувати контакти магазину</div>
+    <div class="form-group">
+      <label class="form-label">Область</label>
+      <input class="form-input" id="store-region" value="${storeData.region}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Місто</label>
+      <input class="form-input" id="store-city" value="${storeData.city}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Адреса (вулиця)</label>
+      <input class="form-input" id="store-address" value="${storeData.address}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Телефон магазину</label>
+      <input class="form-input" id="store-phone" value="${storeData.phone}">
+    </div>
+    <button class="checkout-btn" onclick="saveContacts()">💾 Зберегти контакти</button>
+  `;
+}
+
+function saveContacts() {
+  storeData.region = document.getElementById('store-region').value;
+  storeData.city = document.getElementById('store-city').value;
+  storeData.address = document.getElementById('store-address').value;
+  storeData.phone = document.getElementById('store-phone').value;
+  showSuccessModal('✅', 'Збережено!', 'Контакти оновлено');
+  setTimeout(() => closeModal(), 1500);
+}
+
+function renderAdminSchedule() {
+  const el = document.getElementById('tab-schedule');
+  el.innerHTML = `
+    <div class="section-title">Графік роботи магазину</div>
+    <div class="form-group">
+      <label class="form-label">Розклад (по рядках)</label>
+      <textarea class="form-textarea" id="store-schedule" rows="4">${storeData.schedule}</textarea>
+      <div style="font-size:11px;color:var(--gray);margin-top:6px;font-weight:600">Кожен рядок = окремий день/період</div>
+    </div>
+    <button class="checkout-btn" onclick="saveSchedule()">💾 Зберегти графік</button>
+
+    <div class="section-title" style="margin-top:20px">Поточний графік</div>
+    <div class="contact-box">
+      <div class="contact-label">🕐 РЕЖИМ РОБОТИ</div>
+      <div class="contact-text">${storeData.schedule}</div>
+    </div>
+  `;
+}
+
+function saveSchedule() {
+  storeData.schedule = document.getElementById('store-schedule').value;
+  showSuccessModal('✅', 'Збережено!', 'Графік оновлено');
+  setTimeout(() => { closeModal(); renderAdminSchedule(); }, 1500);
+}
+
+function switchAdminTab(e, tab) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  e.target.classList.add('active');
+  document.querySelectorAll('.admin-tab-content').forEach(el => el.style.display = 'none');
+  document.getElementById('tab-' + tab).style.display = 'block';
+  if(tab === 'orders') renderAdminOrders();
+  if(tab === 'news') renderAdminNews();
+  if(tab === 'add-product') renderAddProduct();
+  if(tab === 'products') renderAdminProducts();
+  if(tab === 'groups') renderAdminGroups();
+  if(tab === 'contacts') renderAdminContacts();
+  if(tab === 'schedule') renderAdminSchedule();
+}
+
+function generateHeights(from, to) {
+  const heights = [];
+  for(let h = from; h <= to; h += 6) heights.push(h);
+  return heights;
+}
+
+function renderAddProduct() {
+  const el = document.getElementById('tab-add-product');
+  const isEdit = editingProductId !== null;
+  const editing = isEdit ? products.find(p => p.id === editingProductId) : null;
+
+  el.innerHTML = `
+    <div class="section-title">${isEdit ? '✏️ Редагувати товар' : '➕ Додати новий товар'}</div>
+    
+    <div class="form-group">
+      <label class="form-label">Назва товару</label>
+      <input class="form-input" id="p-name" placeholder="напр. Куртка-бомбер" value="${editing?.name || ''}">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Опис</label>
+      <textarea class="form-textarea" id="p-desc" placeholder="Опис товару...">${editing?.desc || ''}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">📸 Фотографії товару (декілька)</label>
+      <div id="photos-preview" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;min-height:30px"></div>
+      <label style="display:block;border:2px dashed var(--red-light);border-radius:12px;padding:20px;text-align:center;cursor:pointer;background:#FFFBF0;font-weight:700;color:var(--red);font-size:13px">
+        📷 Додати фото (можна декілька)
+        <input type="file" id="p-photos" accept="image/*" multiple style="display:none" onchange="handlePhotosUpload(event)">
+      </label>
+      <div style="font-size:11px;color:var(--gray);margin-top:6px;font-weight:600">Або виберіть емодзі нижче</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Емодзі (якщо немає фото)</label>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px">
+        ${['🧥','👕','👖','🧶','👟','🧢','👗','🥾','🧤','🧣','👔','🩳'].map(e => `
+          <button style="padding:10px;border:2px solid var(--red-light);background:white;border-radius:10px;cursor:pointer;font-size:24px" onclick="selectEmoji('${e}')" id="emoji-${e}">${e}</button>
+        `).join('')}
+      </div>
+      <input type="hidden" id="p-emoji" value="${editing?.emoji || '🧥'}">
+      <div style="font-size:12px;color:var(--red);margin-top:8px;font-weight:700" id="selected-emoji">Вибрано: ${editing?.emoji || '🧥'}</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Ціна (₴)</label>
+        <input class="form-input" id="p-price" type="number" placeholder="0" value="${editing?.price || 0}">
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Знижка (%)</label>
+        <input class="form-input" id="p-discount" type="number" placeholder="0" value="${editing?.discount || 0}" min="0" max="100">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Група товару</label>
+      <select class="form-input" id="p-group">
+        ${productGroups.map(g => `<option value="${g.id}" ${editing?.group === g.id ? 'selected' : ''}>${g.name}</option>`).join('')}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Ріст (см, від 56 до 176)</label>
+      <div style="display:flex;gap:8px">
+        <input class="form-input" id="p-height-from" type="number" min="56" max="176" value="${editing?.heights[0] || 56}" style="flex:1">
+        <input class="form-input" id="p-height-to" type="number" min="56" max="176" value="${editing?.heights[editing.heights.length-1] || 176}" style="flex:1">
+      </div>
+      <div style="font-size:11px;color:var(--gray);margin-top:6px" id="height-preview"></div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Кольори</label>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;min-height:30px" id="color-chips"></div>
+      <div style="display:flex;gap:8px">
+        <input class="form-input" id="color-input" placeholder="напр. Червоний" style="flex:1">
+        <button style="width:44px;height:44px;background:var(--red);color:white;border:none;border-radius:10px;cursor:pointer;font-size:18px;font-weight:800" onclick="addColor()">+</button>
+      </div>
+    </div>
+
+    <button class="checkout-btn" onclick="saveProduct()">${isEdit ? '💾 Зберегти зміни' : '🚀 Додати товар'}</button>
+    ${isEdit ? '<button style="width:100%;background:var(--gray-light);color:var(--gray);border:none;border-radius:14px;padding:12px;font-weight:700;cursor:pointer;margin-top:8px" onclick="cancelEdit()">Скасувати</button>' : ''}
+  `;
+
+  // Init form
+  tempColors = isEdit ? [...editing.colors] : [];
+  tempPhotos = isEdit && editing.photos ? [...editing.photos] : [];
+  renderColorChips();
+  renderPhotosPreview();
+  updateHeightPreview();
+  if(editing?.emoji) selectEmoji(editing.emoji);
+  
+  document.getElementById('p-height-from').addEventListener('change', updateHeightPreview);
+  document.getElementById('p-height-to').addEventListener('change', updateHeightPreview);
+}
+
+function handlePhotosUpload(event) {
+  const files = Array.from(event.target.files);
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      tempPhotos.push(e.target.result);
+      renderPhotosPreview();
+    };
+    reader.readAsDataURL(file);
+  });
+  event.target.value = '';
+}
+
+function renderPhotosPreview() {
+  const el = document.getElementById('photos-preview');
+  if(!el) return;
+  if(tempPhotos.length === 0) {
+    el.innerHTML = '';
+    return;
+  }
+  el.innerHTML = tempPhotos.map((photo, idx) => `
+    <div style="position:relative;border-radius:10px;overflow:hidden;aspect-ratio:1;border:2px solid var(--red-light)">
+      <img src="${photo}" style="width:100%;height:100%;object-fit:cover">
+      <button onclick="removePhoto(${idx})" style="position:absolute;top:4px;right:4px;width:24px;height:24px;background:var(--red);color:white;border:none;border-radius:50%;cursor:pointer;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center">✕</button>
+      ${idx === 0 ? '<div style="position:absolute;bottom:4px;left:4px;background:var(--gold);color:white;font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;font-family:Unbounded">ГОЛОВНЕ</div>' : ''}
+    </div>
+  `).join('');
+}
+
+function removePhoto(idx) {
+  tempPhotos.splice(idx, 1);
+  renderPhotosPreview();
+}
+
+function selectEmoji(e) {
+  document.getElementById('p-emoji').value = e;
+  document.getElementById('selected-emoji').textContent = `Вибрано: ${e}`;
+  document.querySelectorAll('[id^="emoji-"]').forEach(el => {
+    el.style.borderColor = 'var(--red-light)';
+    el.style.background = 'white';
+  });
+  const btn = document.getElementById('emoji-' + e);
+  if(btn) {
+    btn.style.borderColor = 'var(--red)';
+    btn.style.background = 'var(--red-light)';
+  }
+}
+
+function updateHeightPreview() {
+  const from = parseInt(document.getElementById('p-height-from')?.value) || 56;
+  const to = parseInt(document.getElementById('p-height-to')?.value) || 176;
+  const heights = generateHeights(from, to);
+  const el = document.getElementById('height-preview');
+  if(el) el.textContent = `Ростовка: ${heights.join(', ')} см`;
+}
+
+function addColor() {
+  const input = document.getElementById('color-input');
+  const color = input.value.trim();
+  if(!color) return;
+  if(tempColors.includes(color)) { alert('Колір вже додано'); return; }
+  tempColors.push(color);
+  input.value = '';
+  renderColorChips();
+}
+
+function removeColor(c) {
+  tempColors = tempColors.filter(x => x !== c);
+  renderColorChips();
+}
+
+function renderColorChips() {
+  const el = document.getElementById('color-chips');
+  if(!el) return;
+  el.innerHTML = tempColors.map(c => `
+    <div style="background:var(--red-light);color:var(--red);padding:6px 12px;border-radius:20px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:6px">
+      ${c}
+      <span style="cursor:pointer;font-weight:900" onclick="removeColor('${c}')">✕</span>
+    </div>
+  `).join('') || '<div style="font-size:11px;color:var(--gray);font-weight:600">Поки що немає кольорів</div>';
+}
+
+function saveProduct() {
+  const name = document.getElementById('p-name').value.trim();
+  const desc = document.getElementById('p-desc').value.trim();
+  const emoji = document.getElementById('p-emoji').value;
+  const price = parseInt(document.getElementById('p-price').value) || 0;
+  const discount = parseInt(document.getElementById('p-discount').value) || 0;
+  const group = document.getElementById('p-group').value;
+  const from = parseInt(document.getElementById('p-height-from').value) || 56;
+  const to = parseInt(document.getElementById('p-height-to').value) || 176;
+
+  if(!name) { alert('Введи назву товару'); return; }
+  if(price <= 0) { alert('Введи ціну товару'); return; }
+  if(tempColors.length === 0) { alert('Додай хоча б один колір'); return; }
+  if(from >= to) { alert('Ріст "Від" має бути менше "До"'); return; }
+
+  const heights = generateHeights(from, to);
+
+  if(editingProductId !== null) {
+    const idx = products.findIndex(p => p.id === editingProductId);
+    if(idx !== -1) {
+      products[idx] = { ...products[idx], name, desc, emoji, price, discount, group, heights, colors: [...tempColors], photos: [...tempPhotos] };
+    }
+    editingProductId = null;
+    showSuccessModal('✅', 'Товар оновлено!', name);
+  } else {
+    products.push({
+      id: nextProductId++,
+      name, desc, emoji, price, discount, group, heights, colors: [...tempColors], photos: [...tempPhotos]
+    });
+    showSuccessModal('🎉', 'Товар додано!', name);
+  }
+
+  tempColors = [];
+  tempPhotos = [];
+  renderProducts('products-grid');
+  renderProducts('catalog-grid');
+  setTimeout(() => { closeModal(); switchAdminTabById('products'); }, 1500);
+}
+
+function cancelEdit() {
+  editingProductId = null;
+  tempColors = [];
+  renderAddProduct();
+}
+
+function renderAdminProducts() {
+  const el = document.getElementById('tab-products');
+  el.innerHTML = `
+    <div class="section-title">Усі товари (${products.length})</div>
+    ${products.length === 0 ?
+      '<div class="empty-state"><div class="empty-state-emoji">📦</div><div class="empty-state-text">Товарів ще немає</div></div>' :
+      products.map(p => {
+        const finalPrice = Math.round(p.price * (1 - p.discount/100));
+        const groupName = productGroups.find(g => g.id === p.group)?.name || p.group;
+        return `
+          <div class="order-card">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+              <div style="font-size:40px">${p.emoji}</div>
+              <div style="flex:1">
+                <div style="font-size:14px;font-weight:800;color:var(--dark)">${p.name}</div>
+                <div style="font-size:11px;color:var(--gray);margin-top:2px">${groupName}</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-family:'Unbounded';font-size:16px;font-weight:900;color:var(--red)">${finalPrice} ₴</div>
+                ${p.discount > 0 ? `<div style="font-size:10px;color:var(--gold);font-weight:700">-${p.discount}%</div>` : ''}
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--gray);margin-bottom:6px">📏 Ріст: ${p.heights[0]}–${p.heights[p.heights.length-1]} см</div>
+            <div style="font-size:11px;color:var(--gray);margin-bottom:10px">🎨 ${p.colors.join(', ')}</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <button class="status-btn" onclick="editProduct(${p.id})" style="background:var(--gold-light);border-color:var(--gold);color:var(--gold-dark)">✏️ Редагувати</button>
+              <button class="status-btn" onclick="deleteProduct(${p.id})" style="background:#FEE2E2;border-color:var(--red);color:var(--red)">🗑️ Видалити</button>
+            </div>
+          </div>
+        `;
+      }).join('')
+    }
+  `;
+}
+
+function editProduct(id) {
+  editingProductId = id;
+  switchAdminTabById('add-product');
+}
+
+function deleteProduct(id) {
+  if(!confirm('Видалити товар?')) return;
+  products = products.filter(p => p.id !== id);
+  renderAdminProducts();
+  renderProducts('products-grid');
+  renderProducts('catalog-grid');
+  showSuccessModal('🗑️', 'Видалено', '');
+  setTimeout(() => closeModal(), 1200);
+}
+
+function renderAdminGroups() {
+  const el = document.getElementById('tab-groups');
+  el.innerHTML = `
+    <div class="section-title">Групи товарів</div>
+    
+    <div class="form-group">
+      <label class="form-label">Створити нову групу</label>
+      <div style="display:flex;gap:8px">
+        <input class="form-input" id="new-group" placeholder="напр. Літо 2025" style="flex:1">
+        <button style="width:44px;height:44px;background:var(--red);color:white;border:none;border-radius:10px;cursor:pointer;font-size:18px;font-weight:800" onclick="addGroup()">+</button>
+      </div>
+    </div>
+
+    <div class="section-title">Існуючі групи (${productGroups.length})</div>
+    ${productGroups.map(g => {
+      const count = products.filter(p => p.group === g.id).length;
+      return `
+        <div class="order-card" style="display:flex;align-items:center;gap:12px">
+          <div style="font-size:32px">📂</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:800;color:var(--dark)">${g.name}</div>
+            <div style="font-size:11px;color:var(--gray);margin-top:2px">${count} товарів</div>
+          </div>
+          ${count === 0 ? `<button class="status-btn" onclick="deleteGroup('${g.id}')" style="background:#FEE2E2;border-color:var(--red);color:var(--red)">🗑️</button>` : ''}
+        </div>
+      `;
+    }).join('')}
+  `;
+}
+
+function addGroup() {
+  const name = document.getElementById('new-group').value.trim();
+  if(!name) { alert('Введи назву групи'); return; }
+  if(productGroups.some(g => g.name === name)) { alert('Така група вже існує'); return; }
+  
+  const id = 'group_' + Date.now();
+  productGroups.push({ id, name });
+  document.getElementById('new-group').value = '';
+  renderAdminGroups();
+  showSuccessModal('✅', 'Група створена!', name);
+  setTimeout(() => closeModal(), 1200);
+}
+
+function deleteGroup(id) {
+  if(!confirm('Видалити групу?')) return;
+  productGroups = productGroups.filter(g => g.id !== id);
+  renderAdminGroups();
+}
+
+function switchAdminTabById(tabId) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  const tabs = ['orders', 'add-product', 'products', 'groups', 'contacts', 'schedule'];
+  const idx = tabs.indexOf(tabId);
+  if(idx >= 0) document.querySelectorAll('.admin-tab')[idx]?.classList.add('active');
+  document.querySelectorAll('.admin-tab-content').forEach(el => el.style.display = 'none');
+  document.getElementById('tab-' + tabId).style.display = 'block';
+  if(tabId === 'orders') renderAdminOrders();
+  if(tabId === 'add-product') renderAddProduct();
+  if(tabId === 'products') renderAdminProducts();
+  if(tabId === 'groups') renderAdminGroups();
+  if(tabId === 'contacts') renderAdminContacts();
+  if(tabId === 'schedule') renderAdminSchedule();
+}
+
+function renderNews() {
+  const el = document.getElementById('news-section');
+  if(!el) return;
+  
+  const activeNews = news.filter(n => n.active);
+  if(activeNews.length === 0) {
+    el.innerHTML = '';
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="section-title">📢 Новини магазину</div>
+    <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;margin-bottom:8px;scrollbar-width:none" id="news-scroll">
+      ${activeNews.map(n => {
+        const bg = n.banner ? `url('${n.banner}') center/cover` :
+                   n.color === 'red' ? 'linear-gradient(135deg, #DC2626, #991B1B)' :
+                   n.color === 'gold' ? 'linear-gradient(135deg, #F59E0B, #D97706)' :
+                   n.color === 'dark' ? 'linear-gradient(135deg, #1B1B1B, #444)' :
+                   'linear-gradient(135deg, #DC2626, #F59E0B)';
+        const overlay = n.banner ? '<div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%)"></div>' : '';
+        return `
+          <div style="min-width:280px;background:${bg};border-radius:18px;padding:18px;color:white;flex-shrink:0;position:relative;overflow:hidden;min-height:140px">
+            ${overlay}
+            ${!n.banner ? `<div style="position:absolute;right:-10px;top:-10px;font-size:80px;opacity:0.2">${n.emoji}</div>` : ''}
+            <div style="position:relative;z-index:1">
+              <div style="font-size:32px;margin-bottom:8px">${n.emoji}</div>
+              <div style="font-family:'Unbounded';font-size:16px;font-weight:900;margin-bottom:4px;line-height:1.2;text-shadow:${n.banner ? '0 2px 8px rgba(0,0,0,0.5)' : 'none'}">${n.title}</div>
+              <div style="font-size:12px;opacity:0.95;font-weight:600;line-height:1.4;text-shadow:${n.banner ? '0 1px 4px rgba(0,0,0,0.5)' : 'none'}">${n.text}</div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderAdminNews() {
+  const el = document.getElementById('tab-news');
+  const isEdit = editingNewsId !== null;
+  const editing = isEdit ? news.find(n => n.id === editingNewsId) : null;
+
+  el.innerHTML = `
+    <div class="section-title">${isEdit ? '✏️ Редагувати новину' : '📰 Додати новину'}</div>
+    
+    <div class="form-group">
+      <label class="form-label">🖼️ Банер новини (фото)</label>
+      <div id="banner-preview" style="margin-bottom:10px"></div>
+      <label style="display:block;border:2px dashed var(--red-light);border-radius:12px;padding:20px;text-align:center;cursor:pointer;background:#FFFBF0;font-weight:700;color:var(--red);font-size:13px">
+        📷 Завантажити банер
+        <input type="file" id="n-banner" accept="image/*" style="display:none" onchange="handleBannerUpload(event)">
+      </label>
+      <div style="font-size:11px;color:var(--gray);margin-top:6px;font-weight:600">Опціонально. Без банера буде градієнт.</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Тип новини</label>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+        <button class="status-btn" onclick="selectNewsType('🔥', 'Акція тижня!')" id="ntype-sale">🔥 Акція</button>
+        <button class="status-btn" onclick="selectNewsType('✨', 'Новинка тижня')" id="ntype-new">✨ Новинка</button>
+        <button class="status-btn" onclick="selectNewsType('🎁', 'Подарунок')" id="ntype-gift">🎁 Подарунок</button>
+        <button class="status-btn" onclick="selectNewsType('📢', 'Оголошення')" id="ntype-announce">📢 Оголошення</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Емодзі</label>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px">
+        ${['🔥','✨','🎁','📢','💥','⭐','🎉','💝','🏷️','🆕','🌟','💎'].map(e => `
+          <button style="padding:10px;border:2px solid var(--red-light);background:white;border-radius:10px;cursor:pointer;font-size:24px" onclick="selectNewsEmoji('${e}')" id="nemoji-${e}">${e}</button>
+        `).join('')}
+      </div>
+      <input type="hidden" id="n-emoji" value="${editing?.emoji || '🔥'}">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Заголовок</label>
+      <input class="form-input" id="n-title" placeholder="напр. Акція тижня!" value="${editing?.title || ''}">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Текст</label>
+      <textarea class="form-textarea" id="n-text" placeholder="Опис акції/новини...">${editing?.text || ''}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Колір картки (якщо без банера)</label>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        <button onclick="selectNewsColor('red')" id="ncol-red" style="padding:10px;border:2px solid var(--red-light);background:linear-gradient(135deg, #DC2626, #991B1B);color:white;border-radius:10px;cursor:pointer;font-weight:700;font-size:11px">Червоний</button>
+        <button onclick="selectNewsColor('gold')" id="ncol-gold" style="padding:10px;border:2px solid var(--red-light);background:linear-gradient(135deg, #F59E0B, #D97706);color:white;border-radius:10px;cursor:pointer;font-weight:700;font-size:11px">Золотий</button>
+        <button onclick="selectNewsColor('dark')" id="ncol-dark" style="padding:10px;border:2px solid var(--red-light);background:linear-gradient(135deg, #1B1B1B, #444);color:white;border-radius:10px;cursor:pointer;font-weight:700;font-size:11px">Чорний</button>
+        <button onclick="selectNewsColor('mix')" id="ncol-mix" style="padding:10px;border:2px solid var(--red-light);background:linear-gradient(135deg, #DC2626, #F59E0B);color:white;border-radius:10px;cursor:pointer;font-weight:700;font-size:11px">Мікс</button>
+      </div>
+      <input type="hidden" id="n-color" value="${editing?.color || 'red'}">
+    </div>
+
+    <button class="checkout-btn" onclick="saveNews()">${isEdit ? '💾 Зберегти' : '🚀 Додати новину'}</button>
+    ${isEdit ? '<button style="width:100%;background:var(--gray-light);color:var(--gray);border:none;border-radius:14px;padding:12px;font-weight:700;cursor:pointer;margin-top:8px" onclick="cancelNewsEdit()">Скасувати</button>' : ''}
+
+    <div class="section-title" style="margin-top:24px">Усі новини (${news.length})</div>
+    ${news.length === 0 ? 
+      '<div class="empty-state"><div class="empty-state-emoji">📰</div><div class="empty-state-text">Новин ще немає</div></div>' :
+      news.map(n => `
+        <div class="order-card">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+            ${n.banner ? `<div style="width:48px;height:48px;border-radius:10px;background:url('${n.banner}') center/cover"></div>` : `<div style="font-size:36px">${n.emoji}</div>`}
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:800;color:var(--dark)">${n.title}</div>
+              <div style="font-size:11px;color:var(--gray);margin-top:2px">${n.text}</div>
+            </div>
+            <div class="status-pill ${n.active ? 'received' : 'accepted'}">${n.active ? '✓ АКТИВ' : '○ СХОВ'}</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px">
+            <button class="status-btn" onclick="toggleNews(${n.id})" style="background:${n.active ? '#FEE2E2' : '#D1FAE5'};border-color:${n.active ? 'var(--red)' : 'var(--green)'};color:${n.active ? 'var(--red)' : 'var(--green)'}">${n.active ? '🔇 Сховати' : '🔊 Показ.'}</button>
+            <button class="status-btn" onclick="editNews(${n.id})" style="background:var(--gold-light);border-color:var(--gold);color:var(--gold-dark)">✏️ Ред.</button>
+            <button class="status-btn" onclick="deleteNews(${n.id})" style="background:#FEE2E2;border-color:var(--red);color:var(--red)">🗑️</button>
+          </div>
+        </div>
+      `).join('')
+    }
+  `;
+
+  // Init
+  tempBanner = isEdit && editing.banner ? editing.banner : null;
+  renderBannerPreview();
+  if(editing) {
+    selectNewsEmoji(editing.emoji);
+    selectNewsColor(editing.color);
+  }
+}
+
+function handleBannerUpload(event) {
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    tempBanner = e.target.result;
+    renderBannerPreview();
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderBannerPreview() {
+  const el = document.getElementById('banner-preview');
+  if(!el) return;
+  if(!tempBanner) {
+    el.innerHTML = '';
+    return;
+  }
+  el.innerHTML = `
+    <div style="position:relative;border-radius:12px;overflow:hidden;border:2px solid var(--red-light)">
+      <img src="${tempBanner}" style="width:100%;display:block">
+      <button onclick="removeBanner()" style="position:absolute;top:8px;right:8px;width:30px;height:30px;background:var(--red);color:white;border:none;border-radius:50%;cursor:pointer;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+  `;
+}
+
+function removeBanner() {
+  tempBanner = null;
+  renderBannerPreview();
+}
+
+function selectNewsType(emoji, title) {
+  document.getElementById('n-emoji').value = emoji;
+  if(!document.getElementById('n-title').value) {
+    document.getElementById('n-title').value = title;
+  }
+  selectNewsEmoji(emoji);
+}
+
+function selectNewsEmoji(e) {
+  document.getElementById('n-emoji').value = e;
+  document.querySelectorAll('[id^="nemoji-"]').forEach(el => {
+    el.style.borderColor = 'var(--red-light)';
+    el.style.background = 'white';
+  });
+  const btn = document.getElementById('nemoji-' + e);
+  if(btn) {
+    btn.style.borderColor = 'var(--red)';
+    btn.style.background = 'var(--red-light)';
+  }
+}
+
+function selectNewsColor(c) {
+  document.getElementById('n-color').value = c;
+  document.querySelectorAll('[id^="ncol-"]').forEach(el => {
+    el.style.borderColor = 'var(--red-light)';
+    el.style.transform = 'scale(1)';
+  });
+  const btn = document.getElementById('ncol-' + c);
+  if(btn) {
+    btn.style.borderColor = 'var(--dark)';
+    btn.style.transform = 'scale(1.05)';
+  }
+}
+
+function saveNews() {
+  const emoji = document.getElementById('n-emoji').value;
+  const title = document.getElementById('n-title').value.trim();
+  const text = document.getElementById('n-text').value.trim();
+  const color = document.getElementById('n-color').value;
+
+  if(!title) { alert('Введи заголовок'); return; }
+  if(!text) { alert('Введи текст новини'); return; }
+
+  if(editingNewsId !== null) {
+    const idx = news.findIndex(n => n.id === editingNewsId);
+    if(idx !== -1) {
+      news[idx] = { ...news[idx], emoji, title, text, color, banner: tempBanner };
+    }
+    editingNewsId = null;
+    showSuccessModal('✅', 'Новину оновлено!', title);
+  } else {
+    news.push({
+      id: nextNewsId++,
+      emoji, title, text, color, active: true, banner: tempBanner
+    });
+    showSuccessModal('🎉', 'Новину додано!', title);
+  }
+
+  tempBanner = null;
+
+  renderNews();
+  setTimeout(() => { closeModal(); renderAdminNews(); }, 1200);
+}
+
+function toggleNews(id) {
+  const n = news.find(x => x.id === id);
+  if(n) {
+    n.active = !n.active;
+    renderAdminNews();
+    renderNews();
+  }
+}
+
+function editNews(id) {
+  editingNewsId = id;
+  renderAdminNews();
+}
+
+function cancelNewsEdit() {
+  editingNewsId = null;
+  renderAdminNews();
+}
+
+function deleteNews(id) {
+  if(!confirm('Видалити новину?')) return;
+  news = news.filter(n => n.id !== id);
+  renderAdminNews();
+  renderNews();
+}
+
+function getBg(cat) {
+  const colors = { top:'#FEE2E2', bottom:'#DBEAFE', shoes:'#FEF3C7', acc:'#FCE7F3', default:'#F9FAFB' };
+  return colors[cat] || colors.default;
+}
+
+function goTo(screen) {
+  if(!currentUser && screen !== 'login') { goTo('login'); return; }
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + screen).classList.add('active');
+  if(screen === 'home') { renderStoreContacts(); renderNews(); }
+  if(screen === 'cart') renderCart();
+  if(screen === 'checkout') renderCheckout();
+  if(screen === 'account') renderAccount();
+  if(screen === 'admin') renderAdminOrders();
+}
+
+function showSuccessModal(emoji, title, sub) {
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-emoji">${emoji}</div>
+    <div class="modal-title">${title}</div>
+    <div class="modal-sub">${sub}</div>
+    <button class="modal-btn" onclick="closeModal()">Закрити</button>
+  `;
+  document.getElementById('modal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+}
+
+// Init
+renderProducts('products-grid');
+renderProducts('catalog-grid');
+updateBadge();
+
+// PWA: Реєстрація Service Worker
+if('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('✅ Service Worker готовий'))
+      .catch(err => console.warn('Service Worker помилка:', err));
+  });
+}
+
+// PWA: Показ підказки "Встановити додаток"
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Показуємо кнопку через 30 секунд після першого візиту
+  setTimeout(() => {
+    if(deferredPrompt && !localStorage.getItem('pwa-prompt-shown')) {
+      showInstallPrompt();
+    }
+  }, 30000);
+});
+
+function showInstallPrompt() {
+  if(!deferredPrompt) return;
+  localStorage.setItem('pwa-prompt-shown', '1');
+  
+  document.getElementById('modal-content').innerHTML = `
+    <div>
+      <div style="font-size:64px;margin-bottom:16px">📱</div>
+      <div class="modal-title">Встанови KING SHOP!</div>
+      <div class="modal-sub">Додай додаток на головний екран для швидкого доступу</div>
+      <button class="modal-btn" onclick="installPWA()">📲 Встановити</button>
+      <button style="width:100%;background:var(--gray-light);color:var(--gray);border:none;border-radius:14px;padding:12px;font-weight:700;cursor:pointer;margin-top:8px" onclick="closeModal()">Пізніше</button>
+    </div>
+  `;
+  document.getElementById('modal').classList.add('show');
+}
+
+async function installPWA() {
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const result = await deferredPrompt.userChoice;
+  if(result.outcome === 'accepted') {
+    showSuccessModal('🎉', 'Встановлено!', 'KING SHOP додано на головний екран');
+  }
+  deferredPrompt = null;
+  closeModal();
+}
+
+// Hidden admin access: 5 taps on copyright
+document.getElementById('admin-secret-area').addEventListener('click', () => {
+  secretTaps++;
+  if(secretTaps >= 5) {
+    secretTaps = 0;
+    showAdminLogin();
+  }
+  setTimeout(() => secretTaps = 0, 3000);
+});
+</script>
+</body>
+</html>
